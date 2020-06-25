@@ -1,48 +1,33 @@
-import React from 'react'
+import React, {useState} from 'react'
 import * as R from 'ramda'
 
 const mapIndexed = R.addIndex(R.map);
 
-export class Board extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleCellClick = this.handleCellClick.bind(this);
-    this.state = {
-      content: TicTacToe.newEmpty(props.x, props.y)
-    };
-  }
+export const Board = props => {
+  const [state, setState] = useState(props.game);
+  const handleCellClick = e => setState(state.mark(Number(e.target.dataset["cellNr"])));
 
-  handleCellClick(e) {
-    this.setState({
-      content: this.state.content.mark(
-        Number(e.target.dataset["cellNr"]))
-    });
-  }
-
-  render() {
-    return <div className="board">
+  return <div className="board">
       {
         mapIndexed((cellContent, i) =>
           <Cell
             key={i}
             cellNr={i}
-            onClick={this.handleCellClick}
+            onClick={handleCellClick}
             owner={cellContent}
           />
-          , this.state.content.fields)
+          , state.fields)
       }
     </div>;
-  }
-}
+};
 
-export const Cell = function Cell({ owner = '', cellNr, onClick } = { owner: '' }) {
-  return <button
+export const Cell = ({ owner = '', cellNr, onClick } = { owner: '' }) =>
+   <button
     className={`cell cell_${cellNr}`}
     data-cell-nr={cellNr}
     onClick={onClick}>
     {owner}
-  </button>
-}
+  </button>;
 
 export class TicTacToe {
   constructor(fields, currentPlayer = 'X') {
@@ -50,15 +35,15 @@ export class TicTacToe {
     this.currentPlayer = currentPlayer;
   };
 
-  static newEmpty(width, height) {
+  static startWithSize(width, height) {
     return new TicTacToe(Array(width * height).fill(" "));
   }
-
-  toString() { return this.fields.join('') };
 
   oppositePlayer(player) {
     return player === 'X' ? 'O' : 'X';
   }
+
+  toString() { return this.fields.join('') };
 
   mark(cellNr) {
     if (R.nth(cellNr, this.fields) !== ' ') return this;
