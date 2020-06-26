@@ -1,3 +1,5 @@
+import * as R from 'ramda'
+
 export default class TicTacToe {
   constructor(fields, currentPlayer = 'X') {
     this.fields = fields;

@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {Board, Cell, TicTacToe} from './components/cell'
+import TicTacToe from './model/tic_tac_toe'
+import {Board} from './components/board'
 
 
 const App = document.getElementById("app");
